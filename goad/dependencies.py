@@ -10,6 +10,8 @@ class Dependencies:
     aws_enabled = True
     proxmox_enabled = True
     ludus_enabled = True
+    libvirt_enabled = True
+    vagrant_libvirt_enabled = True
     # Can change enabled provisioners (useful if you don't want some dependencies)
     provisioner_local_enabled = False if Utils.is_windows() else True
     provisioner_runner_enabled = False if Utils.is_windows() else True

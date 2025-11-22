@@ -15,6 +15,10 @@ if Dependencies.proxmox_enabled:
     from goad.provider.terraform.proxmox import ProxmoxProvider
 if Dependencies.ludus_enabled:
     from goad.provider.ludus.ludus import LudusProvider
+if Dependencies.libvirt_enabled:
+    from goad.provider.terraform.libvirt import LibvirtProvider
+if Dependencies.vagrant_libvirt_enabled:
+    from goad.provider.vagrant.vagrant_libvirt import VagrantLibvirtProvider
 
 
 class ProviderFactory:
@@ -36,4 +40,8 @@ class ProviderFactory:
             provider = AwsProvider(lab_name, config)
         elif provider_name == LUDUS and Dependencies.ludus_enabled:
             provider = LudusProvider(lab_name, config)
+        elif provider_name == LIBVIRT and Dependencies.libvirt_enabled:
+            provider = LibvirtProvider(lab_name, config)
+        elif provider_name == VAGRANT_LIBVIRT and Dependencies.vagrant_libvirt_enabled:
+            provider = VagrantLibvirtProvider(lab_name)
         return provider

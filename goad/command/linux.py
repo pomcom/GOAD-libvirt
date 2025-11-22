@@ -64,6 +64,9 @@ class LinuxCommand(Command):
 
     def check_ludus(self):
         return self.is_in_path('ludus')
+    
+    def check_libvirt(self):
+        return self.is_in_path('virsh')
 
     # RUN
     def run_ludus(self, args, path, api_key, user_id='', impersonation=False):

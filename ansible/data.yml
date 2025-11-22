@@ -32,7 +32,7 @@
 
     - name: find if two adapters
       set_fact:
-       two_adapters="{{ 'yes' if number_of_interfaces != '1' else 'no' }}"
+       two_adapters="{{ true if number_of_interfaces != '1' else false }}"
       run_once: true
 
     - name: confirm nat_adapter

@@ -76,13 +76,24 @@
   become_user: SYSTEM
 
 - name: Add LAPS attributes to the Computer Attribute
-  win_ad_object:
-    name: Computer
-    may_contain:
-    - ms-Mcs-AdmPwd
-    - ms-Mcs-AdmPwdExpirationTime
-    context: schema
-    update_schema: True
+  win_shell: |
+    Import-Module ActiveDirectory
+    $computerClass = Get-ADObject -Filter "ldapDisplayName -eq 'Computer'" -SearchBase (Get-ADRootDSE).schemaNamingContext -Properties mayContain
+    $currentMayContain = @($computerClass.mayContain)
+    $newAttributes = @('ms-Mcs-AdmPwd', 'ms-Mcs-AdmPwdExpirationTime')
+    $needsUpdate = $false
+    foreach($attr in $newAttributes) {
+      if($attr -notin $currentMayContain) {
+        $currentMayContain += $attr
+        $needsUpdate = $true
+      }
+    }
+    if($needsUpdate) {
+      Set-ADObject -Identity $computerClass.DistinguishedName -Replace @{mayContain = $currentMayContain}
+      Write-Output "LAPS attributes added to Computer class"
+    } else {
+      Write-Output "LAPS attributes already present in Computer class"
+    }
   register: add_laps_attribute
   until: "add_laps_attribute is not failed"
   retries: 3
